@@ -37,8 +37,7 @@ var processReps = function(reps){
 var sets = [1,2,2,2,2,1,1,2,2,2,2,1,1,2,1,2,2,1,2,2,1,2,2,1,2,2,1,2,2,1,2,2,1,2,2,1,1,2,2,1,1,1];
 
 var populateSets = function(startIndex, regimen, reps){
-  var workout = [], pos;
-  var type;
+  var workout = [], pos, type;
 
   for (var i=0; i<3; i++){
     for (var j=0; j<sets[startIndex + i - 1]; j++){
@@ -46,6 +45,7 @@ var populateSets = function(startIndex, regimen, reps){
       type = setType(reps.raw[startIndex + i - 1]);
 
       workout.push({
+        index: workout.length,
         reps: reps.processed[startIndex + i - 1],
         weight: regimen[startIndex + i],
         completed: false,
@@ -101,7 +101,7 @@ var processData = function(data){
       sets = populateSets(i, regimen, reps);
       allWorkoutData[oneRM].workouts.push({
         id: Math.floor(i / 3),
-        workout: Math.floor(i / 3) + 1,
+        number: Math.floor(i / 3) + 1,
         completed: false,
         sets: sets
       });
@@ -113,12 +113,12 @@ var processData = function(data){
 
 };
 
-fs.readFile('server/data/bench-data.csv', 'utf-8', function(err, data){
+fs.readFile('data/bench-data.csv', 'utf-8', function(err, data){
   if (err) throw err;
 
   var processedData = processData(data);
 
-  fs.writeFile('server/data/processed.json', JSON.stringify(processedData), function(err){
+  fs.writeFile('data/processed.json', JSON.stringify(processedData), function(err){
     if (err){
       console.log(err);
     } else {

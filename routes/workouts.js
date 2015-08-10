@@ -4,16 +4,18 @@ module.exports = function(app){
 
   app.get('/workouts/:weight', function(req, res){
 
-    console.log('received request for weight data: ', req.headers);
-
     var weight = req.params.weight;
 
+    console.log('received request for weight: ', weight);
+
     fs.readFile('./data/processed.json', 'utf-8', function(err, data){
-      console.log(err);
-      if (err) throw err;
+      if (err) {
+        console.log('Error reading regimen data: ', err);
+        throw err;
+      }
 
       var regimen = JSON.parse(data.trim())[weight];
-    
+
       res.status(200).send(regimen);
     });
   });
